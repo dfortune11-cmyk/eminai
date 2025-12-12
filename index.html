@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>애미나이 - 파트너스</title>
+    <title>애미나이 - 센스쟁이</title>
     <style>
         * { box-sizing: border-box; }
         body { 
@@ -33,22 +33,15 @@
         .user-msg { align-self: flex-end; background-color: #ffeb33; color: #333; border-top-right-radius: 2px; }
         .ai-msg { align-self: flex-start; background-color: #ffffff; color: #333; border-top-left-radius: 2px; }
         
-        /* [수익화 버튼] */
         .ad-btn {
-            display: block; margin-top: 8px; padding: 8px 12px;
+            display: block; margin-top: 25px; padding: 10px 12px;
             background-color: #ff3333; color: white; text-decoration: none;
             font-weight: bold; border-radius: 8px; text-align: center;
-            font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            transition: transform 0.1s;
         }
-        /* ★★★ [법적 필수 문구 디자인] ★★★ */
-        .legal-notice {
-            display: block;
-            margin-top: 5px;
-            font-size: 10px;
-            color: #888;
-            text-align: center;
-            line-height: 1.2;
-        }
+        .ad-btn:active { transform: scale(0.95); }
+        .legal-notice { display: block; margin-top: 5px; font-size: 10px; color: #888; text-align: center; line-height: 1.2; }
 
         .input-area { background: #fff; padding: 10px; display: flex; gap: 8px; border-top: 1px solid #ddd; }
         input { flex-grow: 1; padding: 12px; border: 1px solid #ddd; background: #f5f5f5; border-radius: 20px; outline: none; font-size: 16px; }
@@ -59,37 +52,38 @@
 <body>
 
     <div class="app-container">
-        <div class="ad-space">💰 구글 애드센스 배너 (상단) 💰</div>
+        <div class="ad-space">💰💰</div>
+        
         <div class="header">
-            <h1>💸 애미나이 (수익화+법적준수)</h1>
+            <h1>🤪 애미나이 (얼렁뚱땅 고민해결 : fect 팬 메이드)</h1>
             <p id="status-msg">대기 중...</p>
         </div>
         <div id="chat-box">
-            <div class="msg ai-msg">어서 오세요. 법적으로 안전하게 돈 버는 AI입니다.</div>
+            <div class="msg ai-msg">안녕하세요. 팬심으로 만든 AI입니다.<br>해결책은 드리지만 책임은 안 집니다.</div>
         </div>
         <div class="input-area">
-            <input type="text" id="user-input" placeholder="고민 입력 (예: 배고파)" onkeypress="if(event.keyCode==13) sendMessage()">
+            <input type="text" id="user-input" placeholder="고민 입력 (예: 예뻐지고 싶어)" lang="ko" autofocus autocomplete="off" onkeypress="if(event.keyCode==13) sendMessage()">
             <button onclick="sendMessage()">⬆</button>
         </div>
-        <div class="ad-space">💰 구글 애드센스 배너 (하단) 💰</div>
+        
+        <div class="ad-space">💰💰</div>
     </div>
 
     <script>
-        // ★★★ 여기에 API 키를 다시 넣어주세요! ★★★
+        // ★★★ 선생님의 API 키를 여기에 넣어주세요 ★★★
         const RAW_API_KEY = "AIzaSyDqJO3rIXoWvcwpLfZ23zkTpNHJE2DLO28"; 
         const API_KEY = RAW_API_KEY.trim();
 
         const RACERS = ["gemini-2.5-flash", "gemini-2.0-flash-exp", "gemini-2.0-flash", "gemini-flash-latest"];
 
-        // 수익화 키워드 설정
         const AD_TRIGGERS = {
-            "배고파": { text: "햇반 24개 최저가 (쟁여놔)", link: "https://link.coupang.com/a/ddGzUQ" },
-            "라면": { text: "한강 라면기계 (집에 둬)", link: "https://link.coupang.com/a/ddGAGN" },
+            "배고파": { text: "햇반 24개 최저가 (쟁이셈)", link: "https://link.coupang.com/a/ddGzUQ" },
+            "라면": { text: "한강 라면기계 (집에 두삼)", link: "https://link.coupang.com/a/ddGAGN" },
             "심심해": { text: "거짓말탐지기 (핵꿀잼)", link: "https://link.coupang.com/a/ddGBaZ" },
             "피곤해": { text: "박카스 한 박스 (로켓배송)", link: "https://link.coupang.com/a/ddGBGz" },
-            "살": { text: "곤약 젤리 (살 안 쪄)", link: "https://link.coupang.com/a/ddGCeb" },
-            "더워": { text: "휴대용 선풍기 (써봐)", link: "https://link.coupang.com/a/ddGCQH" },
-            "추워": { text: "입는 담요 (따뜻함)", link: "https://link.coupang.com/a/ddGDA5" }
+            "살": { text: "곤약 젤리 (살 안 찜)", link: "https://link.coupang.com/a/ddGCeb" },
+            "더워": { text: "휴대용 선풍기 (션함)", link: "https://link.coupang.com/a/ddGCQH" },
+            "추워": { text: "입는 담요 (뜨심)", link: "https://link.coupang.com/a/ddGDA5" }
         };
 
         async function sendMessage() {
@@ -110,12 +104,34 @@
 
             statusMsg.innerText = "답변 작성 중...";
 
+            // ★★★ 핵심 수정: '신체 훼손 금지' 및 '도구/꼼수 활용' 지시 ★★★
             const systemInstruction = `
-                당신은 '애미나이'입니다.
-                1. 말투: 존댓말 필수, 비속어 금지. 재치 있는 언어유희 사용.
-                2. 답변: 질문에 대해 엉뚱하고 기발한 해결책을 제시하세요.
-                3. 길이: 30자 이내로 짧게.
-                예) "배고파" -> "뱃가죽이 등가죽과 하이파이브 하기 직전이군요!"
+                당신은 '애미나이'입니다. 센스 있고 유쾌한 AI입니다.
+                
+                [절대 원칙]
+                1. 신체 훼손 금지: 절대 자해하거나 아픈 해결책을 주지 마세요. (칼, 불, 절단 금지)
+                2. 해결책 스타일: '도구', '가면', '조명', '착시효과'를 이용한 꼼수를 알려주세요.
+                3. 말투: 정중한 존댓말.
+                4. 길이: 40자 이내.
+
+                [학습 데이터 (이런 느낌으로 대답해!)]
+                Q: 예뻐지고 싶어.
+                A: 장원영 가면을 쓰세요. 1초 만에 대한민국 원탑 미녀가 됩니다.
+
+                Q: 잘생겨지고 싶어.
+                A: 차은우 사진을 얼굴에 붙이고 다니세요. 모두가 당신만 쳐다볼 겁니다.
+
+                Q: 배고파.
+                A: 먹방을 보세요. 뇌가 먹었다고 착각해서 배가 부를 겁니다.
+
+                Q: 돈이 없어.
+                A: 통장 잔고 뒤에 '0'을 매직으로 그려 넣으세요. 기분이 좋아집니다.
+
+                Q: 키가 크고 싶어.
+                A: 20cm 굽이 있는 신발을 신으세요. 공기 윗물이 다릅니다.
+
+                Q: 추워.
+                A: 태양 사진을 계속 쳐다보세요. 심리적으로 따뜻해집니다.
             `;
 
             const requestPromises = RACERS.map(modelName => 
@@ -137,12 +153,10 @@
                 
                 let aiHtml = `<div class="msg ai-msg">${winner.text}`;
                 
-                // 수익화 버튼 + 법적 문구 생성
                 for (const [keyword, ad] of Object.entries(AD_TRIGGERS)) {
                     if (userText.includes(keyword)) {
                         aiHtml += `<a href="${ad.link}" target="_blank" class="ad-btn">👉 ${ad.text}</a>`;
-                        // ★★★ 법적 문구 추가 (버튼 밑에 작게 표시) ★★★
-                        aiHtml += `<span class="legal-notice">이 포스팅은 쿠팡 파트너스 활동의 일환으로,<br>이에 따른 일정액의 수수료를 제공받습니다.</span>`;
+                        aiHtml += `<span class="legal-notice">이 링크는 쿠팡 파트너스 활동의 일환으로,<br>이에 따른 일정액의 수수료를 제공받습니다.</span>`;
                         break;
                     }
                 }
@@ -153,7 +167,7 @@
 
             } catch (error) {
                 document.getElementById(loadingId).remove();
-                chatBox.insertAdjacentHTML('beforeend', `<div class="msg ai-msg" style="color:red;">오류 발생. API 키를 확인해주세요.</div>`);
+                chatBox.insertAdjacentHTML('beforeend', `<div class="msg ai-msg" style="color:red;">오류 발생.</div>`);
                 statusMsg.innerText = "❌ 오류";
             }
             chatBox.scrollTop = chatBox.scrollHeight;
