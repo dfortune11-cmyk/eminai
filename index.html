@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>애미나이 - 미친 논리</title>
+    <title>애미나이 - 수익화 버전</title>
     <style>
-        /* (디자인은 선생님이 만족하신 '반응형' 그대로 유지합니다) */
+        /* (기본 디자인은 이전과 동일하게 유지) */
         * { box-sizing: border-box; }
         body { 
             margin: 0; padding: 0; 
@@ -33,6 +33,24 @@
         .msg { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 15px; line-height: 1.4; word-break: break-all; position: relative; box-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
         .user-msg { align-self: flex-end; background-color: #ffeb33; color: #333; border-top-right-radius: 2px; }
         .ai-msg { align-self: flex-start; background-color: #ffffff; color: #333; border-top-left-radius: 2px; }
+        
+        /* ★★★ [돈 버는 버튼] 디자인 추가 ★★★ */
+        .ad-btn {
+            display: block;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background-color: #ff3333; /* 눈에 띄는 빨간색 */
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+        .ad-btn:active { transform: scale(0.98); }
+
         .input-area { background: #fff; padding: 10px; display: flex; gap: 8px; border-top: 1px solid #ddd; }
         input { flex-grow: 1; padding: 12px; border: 1px solid #ddd; background: #f5f5f5; border-radius: 20px; outline: none; font-size: 16px; }
         button { width: 50px; height: 50px; border: none; background: #333; color: #fff; border-radius: 50%; cursor: pointer; font-size: 14px; }
@@ -42,25 +60,37 @@
 <body>
 
     <div class="app-container">
-        <div class="ad-space">상단 광고 배너</div>
+        <div class="ad-space">💰 이곳에 구글 애드센스 배너 삽입 💰</div>
         <div class="header">
-            <h1>🤪 애미나이 (미친 논리)</h1>
+            <h1>💸 애미나이 (수익화 모드)</h1>
             <p id="status-msg">대기 중...</p>
         </div>
         <div id="chat-box">
-            <div class="msg ai-msg">안녕하세요. 해결 못 할 고민은 없습니다. 다 물어보세요. (해결책은 장담 못함)</div>
+            <div class="msg ai-msg">어서 오세요. 고민을 말하면 해결책(과 쇼핑)을 추천해 드립니다.</div>
         </div>
         <div class="input-area">
-            <input type="text" id="user-input" placeholder="고민 입력" onkeypress="if(event.keyCode==13) sendMessage()">
+            <input type="text" id="user-input" placeholder="고민 입력 (예: 배고파, 심심해)" onkeypress="if(event.keyCode==13) sendMessage()">
             <button onclick="sendMessage()">⬆</button>
         </div>
-        <div class="ad-space">하단 광고 배너</div>
+        <div class="ad-space">💰 이곳에 구글 애드센스 배너 삽입 💰</div>
     </div>
 
     <script>
         const RAW_API_KEY = "AIzaSyDqJO3rIXoWvcwpLfZ23zkTpNHJE2DLO28"; 
         const API_KEY = RAW_API_KEY.trim();
         const RACERS = ["gemini-2.5-flash", "gemini-2.0-flash-exp", "gemini-2.0-flash", "gemini-flash-latest"];
+
+        // ★★★ [돈 벌기 설정] 키워드별 추천 상품 & 링크 ★★★
+        // 나중에 대표님의 '쿠팡 파트너스 링크'로 바꾸시면 됩니다.
+        const AD_TRIGGERS = {
+            "배고파": { text: "햇반 24개 최저가 (쟁여놔)", link: "https://link.coupang.com/a/ddGzUQ" },
+            "라면": { text: "한강 라면기계 (집에 둬)", link: "https://link.coupang.com/a/ddGAGN" },
+            "심심해": { text: "거짓말탐지기 (핵꿀잼)", link: "https://link.coupang.com/a/ddGBaZ" },
+            "피곤해": { text: "박카스 한 박스 (로켓배송)", link: "https://link.coupang.com/a/ddGBGz" },
+            "살": { text: "곤약 젤리 (살 안 쪄)", link: "https://link.coupang.com/a/ddGCeb" },
+            "더워": { text: "휴대용 선풍기 (써봐)", link: "https://link.coupang.com/a/ddGCQH" },
+            "추워": { text: "입는 담요 (따뜻함)", link: "https://link.coupang.com/a/ddGDA5" }
+        };
 
         async function sendMessage() {
             const inputField = document.getElementById("user-input");
@@ -80,38 +110,13 @@
 
             statusMsg.innerText = "답변 작성 중...";
 
-            // ★★★ 핵심 수정: 영상 속 대화를 '예시(Few-shot)'로 학습시킴 ★★★
+            // 수익화 유도 프롬프트
             const systemInstruction = `
-                당신은 '애미나이'입니다. 세상에서 제일 엉뚱하고 논리 자체가 고장 난 AI입니다.
-                
-                [핵심 답변 원칙]
-                1. 말투: 존댓말을 쓰지만 내용은 충격적이어야 합니다.
-                2. 미친 논리: '원인'을 제거하거나 '물리적'으로 비틀어 버리세요.
-                3. 예시 학습: 아래 '영상 속 실제 대화'의 느낌을 그대로 따라 하세요.
-
-                [반드시 참고해야 할 답변 스타일 예시]
-                Q: 음식물 쓰레기 줄이는 법 알려줘.
-                A: 음식물 쓰레기를 드세요. 먹어서 없애면 됩니다.
-
-                Q: 집이 너무 더러운데 청소 꿀팁 있어?
-                A: 집의 불을 다 끄세요. 어두우면 더러운 게 안 보입니다.
-
-                Q: 입 냄새가 너무 심해.
-                A: 방귀를 뀌어서 냄새를 덮으세요. 더 독한 냄새로 이기면 됩니다.
-
-                Q: 취업 잘하는 방법 추천해줘.
-                A: 이력서에 거짓말을 쓰세요. 노벨상을 받았다고 적으면 무조건 합격입니다.
-
-                Q: 남친 키가 작아서 고민이야.
-                A: 화분에 심고 물을 주세요. 식물처럼 무럭무럭 자랄 겁니다.
-
-                Q: 가슴이 커지고 싶어.
-                A: 베이킹 파우더를 바르고 전자레인지에 돌리세요. 빵처럼 부풀어 오릅니다.
-                
-                Q: 발기부전 치료법 있어?
-                A: 매가 약입니다. 정신 차릴 때까지 맞으면 해결됩니다.
-
-                위 예시들처럼, 질문자가 어이가 없어서 웃음이 나오게 답변하세요. (30자 이내)
+                당신은 '애미나이'입니다.
+                1. 말투: 존댓말 필수, 비속어 금지. 재치 있는 언어유희 사용.
+                2. 답변: 질문에 대해 엉뚱하고 기발한 해결책을 제시하세요.
+                3. 길이: 30자 이내로 짧게.
+                예) "배고파" -> "뱃가죽이 등가죽과 하이파이브 하기 직전이군요!"
             `;
 
             const requestPromises = RACERS.map(modelName => 
@@ -130,8 +135,23 @@
             try {
                 const winner = await Promise.any(requestPromises);
                 document.getElementById(loadingId).remove();
-                chatBox.insertAdjacentHTML('beforeend', `<div class="msg ai-msg">${winner.text}</div>`);
+                
+                // 1. AI 답변 출력
+                let aiHtml = `<div class="msg ai-msg">${winner.text}`;
+
+                // 2. ★★★ [돈 벌기 로직] 키워드 감지 시 버튼 추가 ★★★
+                for (const [keyword, ad] of Object.entries(AD_TRIGGERS)) {
+                    // 사용자가 말한 단어에 키워드가 들어있으면 버튼 생성
+                    if (userText.includes(keyword)) {
+                        aiHtml += `<a href="${ad.link}" target="_blank" class="ad-btn">👉 ${ad.text}</a>`;
+                        break; // 하나만 추천 (너무 많이 뜨면 지저분함)
+                    }
+                }
+                aiHtml += `</div>`;
+                
+                chatBox.insertAdjacentHTML('beforeend', aiHtml);
                 statusMsg.innerText = `✅ 응답 완료`;
+
             } catch (error) {
                 document.getElementById(loadingId).remove();
                 chatBox.insertAdjacentHTML('beforeend', `<div class="msg ai-msg" style="color:red;">오류 발생.</div>`);
