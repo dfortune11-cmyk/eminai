@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>애미나이 - 미친 논리</title>
+    <style>
+        /* (디자인은 선생님이 만족하신 '반응형' 그대로 유지합니다) */
+        * { box-sizing: border-box; }
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            background-color: #b2c7d9; 
+            height: 100vh; 
+            display: flex; justify-content: center; align-items: center;
+        }
+        .app-container {
+            background-color: #ffffff;
+            display: flex; flex-direction: column;
+            overflow: hidden; position: relative;
+        }
+        @media (min-width: 768px) {
+            .app-container { width: 450px; height: 800px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+            body { background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2029&auto=format&fit=crop'); background-size: cover; }
+        }
+        @media (max-width: 767px) {
+            .app-container { width: 100%; height: 100%; border-radius: 0; box-shadow: none; }
+        }
+        .header { background: #fff; padding: 15px; text-align: center; border-bottom: 1px solid #eee; flex-shrink: 0; }
+        .header h1 { margin: 0; font-size: 18px; color: #333; }
+        .header p { margin: 2px 0 0; font-size: 11px; color: blue; }
+        #chat-box { flex-grow: 1; padding: 20px; overflow-y: auto; background: #b2c7d9; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 15px; line-height: 1.4; word-break: break-all; position: relative; box-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
+        .user-msg { align-self: flex-end; background-color: #ffeb33; color: #333; border-top-right-radius: 2px; }
+        .ai-msg { align-self: flex-start; background-color: #ffffff; color: #333; border-top-left-radius: 2px; }
+        .input-area { background: #fff; padding: 10px; display: flex; gap: 8px; border-top: 1px solid #ddd; }
+        input { flex-grow: 1; padding: 12px; border: 1px solid #ddd; background: #f5f5f5; border-radius: 20px; outline: none; font-size: 16px; }
+        button { width: 50px; height: 50px; border: none; background: #333; color: #fff; border-radius: 50%; cursor: pointer; font-size: 14px; }
+        .ad-space { background: #eee; height: 50px; font-size: 12px; color: #aaa; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="ad-space">상단 광고 배너</div>
+        <div class="header">
+            <h1>🤪 애미나이 (미친 논리)</h1>
+            <p id="status-msg">대기 중...</p>
+        </div>
+        <div id="chat-box">
+            <div class="msg ai-msg">안녕하세요. 해결 못 할 고민은 없습니다. 다 물어보세요. (해결책은 장담 못함)</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="고민 입력" onkeypress="if(event.keyCode==13) sendMessage()">
+            <button onclick="sendMessage()">⬆</button>
+        </div>
+        <div class="ad-space">하단 광고 배너</div>
+    </div>
+
+    <script>
+        const RAW_API_KEY = "AIzaSyDqJO3rIXoWvcwpLfZ23zkTpNHJE2DLO28"; 
+        const API_KEY = RAW_API_KEY.trim();
+        const RACERS = ["gemini-2.5-flash", "gemini-2.0-flash-exp", "gemini-2.0-flash", "gemini-flash-latest"];
+
+        async function sendMessage() {
+            const inputField = document.getElementById("user-input");
+            const chatBox = document.getElementById("chat-box");
+            const statusMsg = document.getElementById("status-msg");
+            const userText = inputField.value;
+
+            if (!userText) return;
+
+            chatBox.insertAdjacentHTML('beforeend', `<div class="msg user-msg">${userText}</div>`);
+            inputField.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const loadingId = "loading-" + Date.now();
+            chatBox.insertAdjacentHTML('beforeend', `<div class="msg ai-msg" id="${loadingId}" style="color:gray;">...</div>`);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            statusMsg.innerText = "답변 작성 중...";
+
+            // ★★★ 핵심 수정: 영상 속 대화를 '예시(Few-shot)'로 학습시킴 ★★★
+            const systemInstruction = `
+                당신은 '애미나이'입니다. 세상에서 제일 엉뚱하고 논리 자체가 고장 난 AI입니다.
+                
+                [핵심 답변 원칙]
+                1. 말투: 존댓말을 쓰지만 내용은 충격적이어야 합니다.
+                2. 미친 논리: '원인'을 제거하거나 '물리적'으로 비틀어 버리세요.
+                3. 예시 학습: 아래 '영상 속 실제 대화'의 느낌을 그대로 따라 하세요.
+
+                [반드시 참고해야 할 답변 스타일 예시]
+                Q: 음식물 쓰레기 줄이는 법 알려줘.
+                A: 음식물 쓰레기를 드세요. 먹어서 없애면 됩니다.
+
+                Q: 집이 너무 더러운데 청소 꿀팁 있어?
+                A: 집의 불을 다 끄세요. 어두우면 더러운 게 안 보입니다.
+
+                Q: 입 냄새가 너무 심해.
+                A: 방귀를 뀌어서 냄새를 덮으세요. 더 독한 냄새로 이기면 됩니다.
+
+                Q: 취업 잘하는 방법 추천해줘.
+                A: 이력서에 거짓말을 쓰세요. 노벨상을 받았다고 적으면 무조건 합격입니다.
+
+                Q: 남친 키가 작아서 고민이야.
+                A: 화분에 심고 물을 주세요. 식물처럼 무럭무럭 자랄 겁니다.
+
+                Q: 가슴이 커지고 싶어.
+                A: 베이킹 파우더를 바르고 전자레인지에 돌리세요. 빵처럼 부풀어 오릅니다.
+                
+                Q: 발기부전 치료법 있어?
+                A: 매가 약입니다. 정신 차릴 때까지 맞으면 해결됩니다.
+
+                위 예시들처럼, 질문자가 어이가 없어서 웃음이 나오게 답변하세요. (30자 이내)
+            `;
+
+            const requestPromises = RACERS.map(modelName => 
+                fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: systemInstruction + "\n\n사용자 질문: " + userText }] }] })
+                }).then(async res => {
+                    if (!res.ok) throw new Error(res.status);
+                    const data = await res.json();
+                    if (data.error) throw new Error(data.error.message);
+                    return { modelName, text: data.candidates[0].content.parts[0].text };
+                })
+            );
+
+            try {
+                const winner = await Promise.any(requestPromises);
+                document.getElementById(loadingId).remove();
+                chatBox.insertAdjacentHTML('beforeend', `<div class="msg ai-msg">${winner.text}</div>`);
+                statusMsg.innerText = `✅ 응답 완료`;
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                chatBox.insertAdjacentHTML('beforeend', `<div class="msg ai-msg" style="color:red;">오류 발생.</div>`);
+                statusMsg.innerText = "❌ 오류";
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+
+</body>
+</html>
