@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>애미나이 (얼렁뚱땅 고민해결 : fect 팬 메이드)</title>
     
@@ -10,6 +10,7 @@
     <meta property="og:title" content="🤪 애미나이 (B급 감성 고민해결 AI)">
     <meta property="og:description" content="팬심으로 만든 팩폭 AI 채팅. 해결책은 주지만 책임은 안 집니다. 심심할 때 클릭! (설치 X)">
     <meta property="og:image" content="https://dfortune11-cmyk.github.io/eminai/thumbnail.png">
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCQX1M5FBG"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -19,7 +20,7 @@
       gtag('config', 'G-QCQX1M5FBG');
     </script>
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8271164250855801"
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8271164250855801"
      crossorigin="anonymous"></script>
 
     <style>
@@ -77,7 +78,7 @@
             <p id="status-msg">대기 중...</p>
         </div>
         <div id="chat-box">
-            <div class="msg ai-msg">안녕하세요. 드립팩토리 팬심으로 만든 AI입니다.<br>해결책은 드리지만 책임은 안 집니다.</div>
+            <div class="msg ai-msg">안녕하세요. 드립팩토리 팬심으로 만든 AI입니다. 해결책은 드리지만 책임은 안 집니다.</div>
         </div>
         <div class="input-area">
             <input type="text" id="user-input" placeholder="고민 입력 (예: 예뻐지고 싶어)" lang="ko" autofocus autocomplete="off" onkeypress="if(event.keyCode==13) sendMessage()">
@@ -161,7 +162,7 @@
                 for (const [keyword, ad] of Object.entries(AD_TRIGGERS)) {
                     if (userText.includes(keyword)) {
                         aiHtml += `<a href="${ad.link}" target="_blank" class="ad-btn">👉 ${ad.text}</a>`;
-                        aiHtml += `<span class="legal-notice">이 포스팅은 쿠팡 파트너스 활동의 일환으로,<br>이에 따른 일정액의 수수료를 제공받습니다.</span>`;
+                        aiHtml += `<span class="legal-notice">이 링크는 쿠팡 파트너스 활동의 일환으로,<br>이에 따른 일정액의 수수료를 제공받습니다.</span>`;
                         break;
                     }
                 }
