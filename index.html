@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>애미나이 - 센스쟁이</title>
+    <title>애미나이 (얼렁뚱땅 고민해결 : fect 팬 메이드)</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCQX1M5FBG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-QCQX1M5FBG');
+    </script>
     <style>
         * { box-sizing: border-box; }
         body { 
@@ -55,11 +64,11 @@
         <div class="ad-space">💰💰</div>
         
         <div class="header">
-            <h1>🤪 애미나이 (얼렁뚱땅 고민해결 : 팬 메이드)</h1>
+            <h1>🤪 애미나이 (얼렁뚱땅 고민해결 : fect 팬 메이드)</h1>
             <p id="status-msg">대기 중...</p>
         </div>
         <div id="chat-box">
-            <div class="msg ai-msg">안녕하세요. 드립팩토리 팬심으로 만든 AI입니다. 해결책은 드리지만 책임은 안 집니다.</div>
+            <div class="msg ai-msg">안녕하세요. 팬심으로 만든 AI입니다.<br>해결책은 드리지만 책임은 안 집니다.</div>
         </div>
         <div class="input-area">
             <input type="text" id="user-input" placeholder="고민 입력 (예: 예뻐지고 싶어)" lang="ko" autofocus autocomplete="off" onkeypress="if(event.keyCode==13) sendMessage()">
@@ -76,6 +85,7 @@
 
         const RACERS = ["gemini-2.5-flash", "gemini-2.0-flash-exp", "gemini-2.0-flash", "gemini-flash-latest"];
 
+        // 선생님의 쿠팡 링크로 수정하신 부분은 그대로 유지됩니다 (예시입니다)
         const AD_TRIGGERS = {
             "배고파": { text: "햇반 24개 최저가 (쟁이셈)", link: "https://link.coupang.com/a/ddGzUQ" },
             "라면": { text: "한강 라면기계 (집에 두삼)", link: "https://link.coupang.com/a/ddGAGN" },
@@ -104,34 +114,20 @@
 
             statusMsg.innerText = "답변 작성 중...";
 
-            // ★★★ 핵심 수정: '신체 훼손 금지' 및 '도구/꼼수 활용' 지시 ★★★
             const systemInstruction = `
                 당신은 '애미나이'입니다. 센스 있고 유쾌한 AI입니다.
                 
                 [절대 원칙]
-                1. 신체 훼손 금지: 절대 자해하거나 아픈 해결책을 주지 마세요. (칼, 불, 절단 금지)
+                1. 신체 훼손 금지: 절대 자해하거나 아픈 해결책을 주지 마세요.
                 2. 해결책 스타일: '도구', '가면', '조명', '착시효과'를 이용한 꼼수를 알려주세요.
                 3. 말투: 정중한 존댓말.
                 4. 길이: 40자 이내.
 
-                [학습 데이터 (이런 느낌으로 대답해!)]
-                Q: 예뻐지고 싶어.
-                A: 장원영 가면을 쓰세요. 1초 만에 대한민국 원탑 미녀가 됩니다.
-
-                Q: 잘생겨지고 싶어.
-                A: 차은우 사진을 얼굴에 붙이고 다니세요. 모두가 당신만 쳐다볼 겁니다.
-
-                Q: 배고파.
-                A: 먹방을 보세요. 뇌가 먹었다고 착각해서 배가 부를 겁니다.
-
-                Q: 돈이 없어.
-                A: 통장 잔고 뒤에 '0'을 매직으로 그려 넣으세요. 기분이 좋아집니다.
-
-                Q: 키가 크고 싶어.
-                A: 20cm 굽이 있는 신발을 신으세요. 공기 윗물이 다릅니다.
-
-                Q: 추워.
-                A: 태양 사진을 계속 쳐다보세요. 심리적으로 따뜻해집니다.
+                [학습 데이터]
+                Q: 예뻐지고 싶어. A: 얼굴에 '미'라고 크게 쓰세요. 지나가던 사람들도 인정할 겁니다.
+                Q: 잘생겨지고 싶어. A: 차은우 사진을 얼굴에 붙이고 다니세요. 모두가 당신만 쳐다볼 겁니다.
+                Q: 배고파. A: 먹방을 보세요. 뇌가 먹었다고 착각해서 배가 부를 겁니다.
+                Q: 돈이 없어. A: 통장 잔고 뒤에 '0'을 매직으로 그려 넣으세요. 기분이 좋아집니다.
             `;
 
             const requestPromises = RACERS.map(modelName => 
@@ -156,7 +152,7 @@
                 for (const [keyword, ad] of Object.entries(AD_TRIGGERS)) {
                     if (userText.includes(keyword)) {
                         aiHtml += `<a href="${ad.link}" target="_blank" class="ad-btn">👉 ${ad.text}</a>`;
-                        aiHtml += `<span class="legal-notice">이 링크는 쿠팡 파트너스 활동의 일환으로,<br>이에 따른 일정액의 수수료를 제공받습니다.</span>`;
+                        aiHtml += `<span class="legal-notice">이 포스팅은 쿠팡 파트너스 활동의 일환으로,<br>이에 따른 일정액의 수수료를 제공받습니다.</span>`;
                         break;
                     }
                 }
@@ -175,5 +171,3 @@
     </script>
 </body>
 </html>
-
-
